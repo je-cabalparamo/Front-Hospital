@@ -5,7 +5,7 @@
         Hospital
       </v-card-title>
       <v-card-title class="text-center">
-        Registro de doctores
+        Registro de enfermeros
       </v-card-title>
       <v-card-text>
         <v-form ref="frmLogin">

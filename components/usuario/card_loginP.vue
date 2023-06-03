@@ -2,7 +2,7 @@
   <div>
     <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
-        Bienvenido doctor, identifiquece
+        Bienvenido, identifiquece
       </v-card-title>
       <v-card-title class="text-center">
         Login main
@@ -66,8 +66,8 @@ export default {
   },
   methods: {
     ingresarSistema () {
-      this.$router.push('/TD')
-    }, /*    async ingresarSistema () {
+      this.$router.push('/TP')
+    }, /* async ingresarSistema () {
       if (this.email.length === 0 && this.password.length === 0) {
         alert('Error en parametros vacios')
         return
@@ -97,7 +97,7 @@ export default {
       }
     } */
     registrar () {
-      this.$router.push('/Registro')
+      this.$router.push('/RP')
     }
   }
 }
