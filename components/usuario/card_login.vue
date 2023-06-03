@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     async ingresarSistema () {
-      if (this.email.length === 0 && this.password.length === 0) {
+      if (this.email.length === 0 || this.password.length === 0) {
         alert('Error en parametros vacios')
         return
       }
@@ -76,7 +76,7 @@ export default {
           data: senData
         }).then(async (res) => {
           if (res.data.error == null) {
-            this.$router.push('/dashbord')
+            this.$router.push('/dashboard')
           }
           console.log(await (res))
         }).catch((error) => {

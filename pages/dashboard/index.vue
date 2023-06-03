@@ -1,14 +1,14 @@
 <template>
-  <tablaUsuarios />
+  <tablaPacientes />
 </template>
 
 <script>
-import tablaUsuarios from '~/components/registroC/registroC.vue'
+import tablaPacientes from '~/components/principal/tabla-pacientes.vue'
 export default {
   name: 'IndexPage',
   auth: true,
   components: {
-    tablaUsuarios
+    tablaPacientes
   },
   layout: 'main'
 }

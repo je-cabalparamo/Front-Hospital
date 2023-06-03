@@ -41,10 +41,14 @@ export default {
     '@nuxtjs/vuetify'
   ],
 
+  router: {
+    middleware: ['auth']
+  },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    '@nuxtjs/axios'
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
 
   auth:{
@@ -58,13 +62,13 @@ export default {
     resetOnError: true,
     strategies: {
       local: {
-        coockie: false,
+        cookie: false,
         user: {
           property: 'user'
         },
         token: {
           property: 'token',
-          require: false
+          required: false
         },
         endpoints: {
           login: {
