@@ -24,7 +24,8 @@
           <v-text-field
             v-model="planta"
             label="Planta"
-            placeholder="Escribe tu planta"
+            placeholder="Escribe tu Consultorio"
+            :rules="validateConsultorio"
           />
           <v-text-field
             v-model="telefono"
@@ -57,7 +58,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn block @click="novo">
+        <v-btn block @click="novo()">
           Registrar
         </v-btn>
       </v-card-actions>
@@ -78,6 +79,9 @@ export default {
     return {
       email: '',
       password: '',
+      validateConsultorio: [
+        v => !v || v.length > 3 || 'Consultorio debe incluir mas de 3 caracteres'
+      ],
       validateEmail: [
         v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ],
@@ -98,19 +102,19 @@ export default {
       }
       const userNovo = {
         nombre: this.nombre,
-        apellidos: this.apellido,
+        apellido: this.apellido,
         email: this.email,
-        password: this.pass,
+        password: this.password,
         telefono: this.telefono,
         consultorio: this.planta,
         especialidad: this.puesto,
         horarioEntrada: this.entrada,
         horarioSalida: this.salida
       }
-      console.log(this.nv)
       await this.$axios.post('/insertarMedico', userNovo, config)
         .then((res) => {
           console.log(res)
+          // this.$router.push('/')
         })
         .catch((err) => {
           console.log(err)
