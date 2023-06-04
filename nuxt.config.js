@@ -47,7 +47,7 @@ export default {
     '@nuxtjs/axios'
   ],
 
-  auth:{
+  auth: {
     redirect: {
       login: '/',
       logout: '/',

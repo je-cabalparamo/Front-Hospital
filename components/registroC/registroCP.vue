@@ -9,59 +9,72 @@
       </v-card-title>
       <v-card-text>
         <v-form ref="frmLogin">
-          <v-text-field
-            v-model="puesto"
-            label="Puesto"
-            placeholder="Escribe tu puesto"
-          />
-          <v-text-field
-            v-model="nombre"
-            label="Nombre"
-            placeholder="Escribe tu nombre"
-          />
-          <v-text-field
-            v-model="apellido"
-            label="Apellido"
-            placeholder="Escribe tu apellido"
-          />
-          <v-text-field
-            v-model="planta"
-            label="Planta"
-            placeholder="Escribe tu Consultorio"
-            :rules="validateConsultorio"
-          />
-          <v-text-field
-            v-model="telefono"
-            label="Telefono"
-            placeholder="Escribe tu telefono"
-          />
-          <v-text-field
-            v-model="entrada"
-            label="Hora entrada"
-            placeholder="Escribe tu horario entrada"
-          />
-          <v-text-field
-            v-model="salida"
-            label="Hora salida"
-            placeholder="Escribe tu horario salida"
-          />
-          <v-text-field
-            v-model="email"
-            label="Email"
-            placeholder="Escribe tu correo"
-            :rules="validateEmail"
-          />
-          <v-text-field
-            v-model="password"
-            label="Password"
-            placeholder="Escribe tu password"
-            type="password"
-            :rules="validatePassword"
-          />
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="puesto"
+                  label="Puesto"
+                  placeholder="Escribe tu puesto"
+                />
+                <v-text-field
+                  v-model="nombre"
+                  label="Nombre"
+                  placeholder="Escribe tu nombre"
+                />
+                <v-text-field
+                  v-model="apellido"
+                  label="Apellido"
+                  placeholder="Escribe tu apellido"
+                />
+                <v-text-field
+                  v-model="planta"
+                  label="Planta"
+                  placeholder="Escribe tu Consultorio"
+                  :rules="validateConsultorio"
+                />
+                <v-text-field
+                  v-model="telefono"
+                  label="Telefono"
+                  placeholder="Escribe tu telefono"
+                />
+              </v-col>
+              <v-col cols="12" md="6">
+                <v-text-field
+                  v-model="entrada"
+                  label="Hora entrada"
+                  placeholder="Escribe tu horario entrada"
+                />
+                <v-text-field
+                  v-model="salida"
+                  label="Hora salida"
+                  placeholder="Escribe tu horario salida"
+                />
+                <v-text-field
+                  v-model="email"
+                  label="Email"
+                  placeholder="Escribe tu correo"
+                  :rules="validateEmail"
+                />
+                <v-text-field
+                  v-model="password"
+                  label="Password"
+                  placeholder="Escribe tu password"
+                  type="password"
+                  :rules="validatePassword"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
         </v-form>
       </v-card-text>
       <v-card-actions>
         <v-btn block @click="novo()">
+          Registrar
+        </v-btn>
+      </v-card-actions>
+      <v-card-actions>
+        <v-btn block @click="prev()">
           Registrar
         </v-btn>
       </v-card-actions>
@@ -96,6 +109,9 @@ export default {
     }
   },
   methods: {
+    prev () {
+      this.$router.push('/Pacientes')
+    },
     async novo () {
       const config = {
         headers: {
