@@ -2,7 +2,7 @@
   <v-row class="principal" style="margin: 10px; padding: 10px;">
     <v-col cols="12">
       <v-row class="principal">
-        Usuarios del sistema
+        Pacientes Dentro del Sistema
       </v-row>
       <v-row class="principal">
         <v-data-table
@@ -33,16 +33,16 @@
     <v-dialog v-model="dialogBorrado" max-width="290" persistent>
       <v-card>
         <v-card-title class="text-h5">
-          Borrado de Usuario
+          Eliminando Paciente
         </v-card-title>
         <v-card-text>
-          Esta por eliminar un ususario, ¿Esta seguro de esta acción?
+          Esta por eliminar un Paciente, ¿Esta seguro de esta acción?
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn color="green darken-1" text @click="dialogBorrado = false">
             Cancelar
-          </v-btn><v-btn color="red darken-4" text @click="borrar()">
+          </v-btn><v-btn color="red darken-4" text @click="borrarPaciente()">
             Aceptar
           </v-btn>
         </v-card-actions>
@@ -50,24 +50,30 @@
     </v-dialog>
     <v-dialog v-model="dialogUpdate" max-width="400" persistent>
       <v-card>
-        <v-card-title>Actualizacion de datos</v-card-title>
+        <v-card-title>Actualizacion de Paciente</v-card-title>
         <v-card-text>
           <v-form ref="frmUpdate">
             Nombre:
-            <v-text-field v-model="user.name" placeholder="Nombre" :rules="rNombre" />
-            A. Paterno:
-            <v-text-field v-model="user.apater" placeholder="A. Paterno" />
-            A. Materno:
-            <v-text-field v-model="user.amater" placeholder="A. Materno" />
-            Password:
-            <v-text-field v-model="password" placeholder="Password" type="password" :rules="rPass" />
+            <v-text-field v-model="user.nombre" placeholder="Nombre" :rules="rNombre" />
+            Apellidos:
+            <v-text-field v-model="user.apellidos" placeholder="Apellios" />
+            Fecha Entrada:
+            <v-text-field v-model="user.fechaEntrada" placeholder="Fecha de Entrada" />
+            Fecha Salida:
+            <v-text-field v-model="user.fechaSalida" placeholder="Fecha de Salida" />
+            Habitacion:
+            <v-text-field v-model="user.habitacion" placeholder="Habitacion" />
+            Medico Encargado
+            <v-text-field v-model="user.medicoEncargado" placeholder="Medico Encargado" />
+            Telefono de Emergencia:
+            <v-text-field v-model="user.telefonoEmergencia" placeholder="Telefono de Emergencia" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="update">
+          <v-btn color="blue" @click="updatePaciente">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -75,26 +81,32 @@
     </v-dialog>
     <v-dialog v-model="dialogNovo" max-width="400" persistent>
       <v-card>
-        <v-card-title>Nuevo Usuario</v-card-title>
+        <v-card-title>Nuevo Paciente</v-card-title>
         <v-card-text>
           <v-form ref="frmNovo">
+            ID:
+            <v-text-field v-model="pacienteid" placeholder="ID del Paciente" :rules="rNombre" />
             Nombre:
-            <v-text-field v-model="name" placeholder="Nombre" :rules="rNombre" />
-            A. Paterno:
-            <v-text-field v-model="apater" placeholder="A. Paterno" />
-            A. Materno:
-            <v-text-field v-model="amater" placeholder="A. Materno" />
-            Correo:
-            <v-text-field v-model="email" placeholder="Correo" :rule="validateEmail" />
-            Password:
-            <v-text-field v-model="pass" placeholder="Password" type="password" :rules="rPass" />
+            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
+            Apellidos:
+            <v-text-field v-model="apellidos" placeholder="Apellios" />
+            Fecha Entrada:
+            <v-text-field v-model="fechaEntrada" placeholder="Fecha de Entrada" />
+            Fecha Salida:
+            <v-text-field v-model="fechaSalida" placeholder="Fecha de Salida" />
+            Habitacion:
+            <v-text-field v-model="habitacion" placeholder="Habitacion" />
+            Medico Encargado
+            <v-text-field v-model="medicoEncargado" placeholder="Medico Encargado" />
+            Telefono de Emergencia:
+            <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogNovo = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="novo(item)">
+          <v-btn color="blue" @click="nuevoPaciente(item)">
             Registrar
           </v-btn>
         </v-card-actions>
@@ -110,29 +122,44 @@ export default {
       usuarios: [],
       headers: [
         {
+          text: 'PacienteId',
+          sortable: true,
+          value: 'pacienteid'
+        },
+        {
           text: 'Nombre',
           sortable: true,
-          value: 'name'
+          value: 'nombre'
         },
         {
-          text: 'A. Paterno',
+          text: 'Apellidos',
           sortable: true,
-          value: 'apater'
+          value: 'apellidos'
         },
         {
-          text: 'A. Materno',
+          text: 'Habitacion',
           sortable: true,
-          value: 'amater'
+          value: 'habitacion'
         },
         {
-          text: 'Correo',
+          text: 'Telefono de Emergencia',
           sortable: true,
-          value: 'email'
+          value: 'telefonoEmergencia'
         },
         {
-          text: 'Fecha Registro',
+          text: 'Fecha de Entrada',
           sortable: true,
-          value: 'date'
+          value: 'fechaEntrada'
+        },
+        {
+          text: 'Fecha de Salida',
+          sortable: true,
+          value: 'fechaSalida'
+        },
+        {
+          text: 'Medico Encargado',
+          sortable: true,
+          value: 'medicoEncargado'
         },
         {
           text: 'Acciones',
@@ -144,28 +171,23 @@ export default {
       idBorrar: '',
       dialogUpdate: false,
       user: {},
-      password: '',
-      validateEmail: [
-        v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-      ],
       rNombre: [v => !v || v.length >= 3 || 'Nombre debe tener minimo 3 caracteres'],
-      rPass: [v => !v || v.length > 4 || 'Password minimo 4 caracteres'],
       dialogNovo: false,
       nv: {}
     }
   },
   created () {
-    this.loadUsers()
+    this.loadPatients()
   },
   methods: {
-    async loadUsers () {
+    async loadPatients () {
       const config = {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'Access-Control-Allow-Origin': '*'
         }
       }
-      await this.$axios.get('/user/getallusers', config)
+      await this.$axios.get('/todo_Paciente', config)
         .then((res) => {
           this.usuarios = res.data.data
           console.log(res)
@@ -173,10 +195,10 @@ export default {
         .catch((err) => { console.log(err) })
     },
     dialogDelete (item) {
-      this.idBorrar = item._id
+      this.idBorrar = item.pacienteid
       this.dialogBorrado = true
     },
-    async borrar () {
+    async borrarPaciente () {
       const config = {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -184,16 +206,17 @@ export default {
         }
       }
       const sendData = {
-        id: this.idBorrar
+        pacienteid: this.idBorrar
       }
-      await this.$axios.post('/user/deleteuser', sendData, config)
+      await this.$axios.post('/eliminar_Paciente', sendData, config)
         .then((res) => {
           console.log(res)
           if (res.data.error === null) {
             this.dialogBorrado = false
-            this.loadUsers()
+            this.loadPatients()
           } else {
-            alert(res.data.data)
+            this.dialogBorrado = false
+            this.loadPatients()
           }
         })
         .catch((e) => {
@@ -205,7 +228,7 @@ export default {
       console.log(this.user)
       this.dialogUpdate = true
     },
-    async update () {
+    async updatePaciente () {
       const config = {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -213,16 +236,19 @@ export default {
         }
       }
       const userUpdate = {
-        id: this.user._id,
-        name: this.user.name,
-        apater: this.user.apater,
-        amater: this.user.amater,
-        password: this.user.password
+        pacienteid: this.user.pacienteid,
+        nombre: this.user.nombre,
+        apellidos: this.user.apellidos,
+        habitacion: this.user.habitacion,
+        telefonoEmergencia: this.user.telefonoEmergencia,
+        fechaEntrada: this.user.fechaEntrada,
+        fechaSalida: this.user.fechaSalida,
+        medicoEncargado: this.user.medicoEncargado
       }
-      await this.$axios.post('/user/updateuser', userUpdate, config)
+      await this.$axios.post('/actualizar_Paciente', userUpdate, config)
         .then((res) => {
           console.log(res)
-          this.loadUsers()
+          this.loadPatients()
           this.dialogUpdate = false
         })
         .catch((err) => {
@@ -232,7 +258,7 @@ export default {
     dialogCreate () {
       this.dialogNovo = true
     },
-    async novo () {
+    async nuevoPaciente () {
       const config = {
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -240,23 +266,30 @@ export default {
         }
       }
       const userNovo = {
-        name: this.name,
-        apater: this.apater,
-        amater: this.amater,
-        email: this.email,
-        password: this.pass
+        pacienteid: this.pacienteid,
+        nombre: this.nombre,
+        apellidos: this.apellidos,
+        habitacion: this.habitacion,
+        telefonoEmergencia: this.telefonoEmergencia,
+        fechaEntrada: this.fechaEntrada,
+        fechaSalida: this.fechaSalida,
+        medicoEncargado: this.medicoEncargado
       }
       console.log(this.nv)
-      await this.$axios.post('/user/register', userNovo, config)
+      await this.$axios.post('/insertar_Paciente', userNovo, config)
         .then((res) => {
           console.log(res)
-          this.loadUsers()
+          this.loadPatients()
           this.dialogNovo = false
-          this.name = ''
-          this.apater = ''
-          this.amater = ''
-          this.email = ''
-          this.pass = ''
+          this.nombre = ''
+          this.pacienteid = ''
+          this.nombre = ''
+          this.apellidos = ''
+          this.fechaEntrada = ''
+          this.fechaSalida = ''
+          this.habitacion = ''
+          this.medicoEncargado = ''
+          this.telefonoEmergencia = ''
         })
         .catch((err) => {
           console.log(err)

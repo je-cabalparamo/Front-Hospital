@@ -92,7 +92,7 @@ export default {
         {
           icon: 'mdi-account-injury-outline',
           title: 'Pácientes',
-          to: '/TE'
+          to: '/TP'
         }
       ],
       miniVariant: false,
