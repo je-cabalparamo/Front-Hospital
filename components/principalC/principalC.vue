@@ -2,10 +2,7 @@
   <div>
     <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
-        Bienvenido doctor, identifiquece
-      </v-card-title>
-      <v-card-title class="text-center">
-        Login main
+        Pagina principal
       </v-card-title>
       <v-card-text>
         <v-form ref="frmLogin">
@@ -65,9 +62,7 @@ export default {
     }
   },
   methods: {
-    ingresarSistema () {
-      this.$router.push('/TD')
-    }, /*    async ingresarSistema () {
+    async ingresarSistema () {
       if (this.email.length === 0 && this.password.length === 0) {
         alert('Error en parametros vacios')
         return
@@ -95,7 +90,7 @@ export default {
       } else {
         alert('Error en parametros')
       }
-    } */
+    },
     registrar () {
       this.$router.push('/Registro')
     }
@@ -103,12 +98,12 @@ export default {
 }
 </script>
 
-  <style scoped>
-  .colorBtn
-  {
-    background-color: blue !important;
-  }
-  .v-dialog__container{
-    display: flex;
-  }
-  </style>
+    <style scoped>
+    .colorBtn
+    {
+      background-color: blue !important;
+    }
+    .v-dialog__container{
+      display: flex;
+    }
+    </style>

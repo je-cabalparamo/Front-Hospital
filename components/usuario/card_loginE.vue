@@ -2,13 +2,13 @@
   <div>
     <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
-        Bienvenido doctor, identifiquece
+        Bienvenido enfermero, identifiquece
       </v-card-title>
       <v-card-title class="text-center">
         Login main
       </v-card-title>
       <v-card-text>
-        <v-form ref="frmLogin">
+        <v-form ref="frmLogin" class="justify-center">
           <v-text-field
             v-model="email"
             label="Email"
@@ -25,7 +25,7 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn block @click="ingresarSistema">
+        <v-btn block @click="lgn">
           <v-icon dense style="padding-right: 20px;">
             mdi-account-key
           </v-icon>
@@ -66,8 +66,32 @@ export default {
   },
   methods: {
     ingresarSistema () {
-      this.$router.push('/TD')
-    }, /*    async ingresarSistema () {
+      this.$router.push('/TE')
+    },
+    async lgn () {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Access-Control-Allow-Origin': '*'
+        }
+      }
+      const dtlgn = {
+        email: this.email,
+        password: this.password
+      }
+      await this.$axios.post('/login', dtlgn, config)
+        .then((res) => {
+          console.log(res)
+          if (res.data.alert === 'Success ... Bienvenido') {
+            this.$router.push('/TE')
+          } else {
+            // alert(res.data.alert)
+          }
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }, /* async ingresarSistema () {
       if (this.email.length === 0 && this.password.length === 0) {
         alert('Error en parametros vacios')
         return
@@ -97,7 +121,7 @@ export default {
       }
     } */
     registrar () {
-      this.$router.push('/Registro')
+      this.$router.push('/RE')
     }
   }
 }
