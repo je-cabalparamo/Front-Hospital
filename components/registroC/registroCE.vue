@@ -65,7 +65,6 @@
                 />
               </v-col>
             </v-row>
-            </v-contariner>
           </v-container>
         </v-form>
       </v-card-text>
