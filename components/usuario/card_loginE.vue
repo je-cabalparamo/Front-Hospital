@@ -85,7 +85,7 @@ export default {
           if (res.data.alert === 'Success ... Bienvenido') {
             this.$router.push('/TE')
           } else {
-            alert(res.data.alert)
+            // alert(res.data.alert)
           }
         })
         .catch((err) => {
