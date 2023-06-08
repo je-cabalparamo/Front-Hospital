@@ -76,6 +76,9 @@ export default {
           data: senData
         }).then(async (res) => {
           if (res.data.error == null) {
+            // Save email and table information to localStorage
+            localStorage.setItem('loggedInEmail', this.email)
+            localStorage.setItem('loggedInTable', res.data.fromTable)
             this.$router.push('/dashboard')
           }
           console.log(await (res))
