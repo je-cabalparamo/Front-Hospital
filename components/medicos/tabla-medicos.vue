@@ -1,14 +1,14 @@
 <template>
   <v-row class="principal" style="margin: 10px; padding: 10px;">
     <v-col cols="12">
-      <v-row class="principal">
+      <v-row class="principal" style="color: black;">
         Médicos del sistema
       </v-row>
       <v-row class="principal">
         <v-data-table
           :headers="headers"
           :items="medicos"
-          style="width: 100%;"
+          style="width: 100%; background-color: #6a8085;"
         >
           <template v-if="loggedInEmail === 'director@hospital.com'" #[`item.acciones`]="{ item }">
             <v-row>
@@ -50,7 +50,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogUpdate" max-width="400" persistent>
-      <v-card>
+      <v-card style="background-color: #6a8085;">
         <v-card-title>Actualización de datos</v-card-title>
         <v-card-text>
           <v-form ref="frmUpdate" v-model="formValid">
@@ -91,7 +91,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogNovo" max-width="400" persistent>
-      <v-card>
+      <v-card style="background-color: #6a8085;">
         <v-card-title>Nuevo Usuario</v-card-title>
         <v-card-text>
           <v-form ref="frmNovo" v-model="formValid">

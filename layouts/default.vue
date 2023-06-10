@@ -32,27 +32,6 @@
       style="background-color: #789dca;"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-<<<<<<< HEAD
-      <!--<v-bt
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>-->
-      <!--<v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>-->
-      <!--<v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>-->
-=======
->>>>>>> 5e93864718b89af6c425c5d16e5b3fc873e3c729
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
       <v-btn v-if="$auth.loggedIn" icon @click="logout">

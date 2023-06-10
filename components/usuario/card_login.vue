@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card shaped elevation="5" width="500" color="brown-darken-3">
+    <v-card shaped elevation="5" width="500" color="brown-darken-3" style="background-color: #6a8085;">
       <v-card-title class="text-center">
         Login main
       </v-card-title>

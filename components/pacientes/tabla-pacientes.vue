@@ -1,14 +1,14 @@
 <template>
   <v-row class="principal" style="margin: 10px; padding: 10px;">
     <v-col cols="12">
-      <v-row class="principal">
+      <v-row class="principal" style="color: black;">
         Pacientes Dentro del Sistema
       </v-row>
       <v-row class="principal">
         <v-data-table
           :headers="headers"
           :items="usuarios"
-          style="width: 100%;"
+          style="width: 100%; background-color: #6a8085;"
         >
           <template #[`item.acciones`]="{ item }">
             <v-row>
@@ -49,7 +49,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogUpdate" max-width="400" persistent>
-      <v-card>
+      <v-card style="background-color: #6a8085;">
         <v-card-title>Actualizacion de Paciente</v-card-title>
         <v-card-text>
           <v-form ref="frmUpdate" v-model="formValid">
@@ -122,7 +122,7 @@
       </v-card>
     </v-dialog>
     <v-dialog v-model="dialogNovo" max-width="400" persistent>
-      <v-card>
+      <v-card style="background-color: #6a8085;">
         <v-card-title>Nuevo Paciente</v-card-title>
         <v-card-text>
           <v-form ref="frmNovo" v-model="formValid">
