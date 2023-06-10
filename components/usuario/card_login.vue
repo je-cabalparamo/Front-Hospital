@@ -75,11 +75,13 @@ export default {
         await this.$auth.loginWith('local', {
           data: senData
         }).then(async (res) => {
-          if (res.data.error == null) {
+          if (res.data.alert === 'Success') {
             // Save email and table information to localStorage
             localStorage.setItem('loggedInEmail', this.email)
             localStorage.setItem('loggedInTable', res.data.fromTable)
             this.$router.push('/dashboard')
+          } else {
+            alert(res.data.alert)
           }
           console.log(await (res))
         }).catch((error) => {

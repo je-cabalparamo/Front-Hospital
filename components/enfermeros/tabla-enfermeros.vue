@@ -52,28 +52,28 @@
       <v-card>
         <v-card-title>Actualizacion de datos</v-card-title>
         <v-card-text>
-          <v-form ref="frmUpdate">
+          <v-form ref="frmUpdate" v-model="formValid">
             Nombre:
-            <v-text-field v-model="user.nombre" placeholder="Nombre" :rules="rNombre" />
+            <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
             Apellidos:
-            <v-text-field v-model="user.apellidos" placeholder="Apellidos" />
+            <v-text-field v-model="updateUser.apellidos" placeholder="Apellidos" />
             Planta:
-            <v-text-field v-model="user.planta" placeholder="Planta" />
+            <v-text-field v-model="updateUser.planta" placeholder="Planta" />
             Ocupacion:
-            <v-text-field v-model="user.puesto" placeholder="Puesto" />
+            <v-text-field v-model="updateUser.puesto" placeholder="Puesto" />
             Telefono:
-            <v-text-field v-model="user.telefono" placeholder="Telefono" />
+            <v-text-field v-model="updateUser.telefono" placeholder="Telefono" :rules="validateTelefono" />
             Hora de entrada:
-            <v-text-field v-model="user.horarioEntrada" placeholder="Entrada" />
+            <v-text-field v-model="updateUser.horarioEntrada" placeholder="Entrada" :rules="validateHoraEntrada" />
             Hora de salida:
-            <v-text-field v-model="user.horarioSalida" placeholder="Salida" />
+            <v-text-field v-model="updateUser.horarioSalida" placeholder="Salida" :rules="validateHoraSalida" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="update">
+          <v-btn color="blue" @click="update" :disabled="!formValid">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -83,7 +83,7 @@
       <v-card>
         <v-card-title>Nuevo Usuario</v-card-title>
         <v-card-text>
-          <v-form ref="frmNovo">
+          <v-form ref="frmNovo" v-model="formValid">
             Nombre:
             <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
             Apellidos:
@@ -93,22 +93,22 @@
             Puesto:
             <v-text-field v-model="puesto" placeholder="Puesto" />
             Telefono:
-            <v-text-field v-model="telefono" placeholder="Telefono" />
+            <v-text-field v-model="telefono" placeholder="Telefono" :rules="validateTelefono" />
             Hora de entrada:
-            <v-text-field v-model="entrada" placeholder="Entrada" />
+            <v-text-field v-model="entrada" placeholder="Entrada" :rules="validateHoraEntrada" />
             Hora de salida:
-            <v-text-field v-model="salida" placeholder="Salida" />
+            <v-text-field v-model="salida" placeholder="Salida" :rules="validateHoraSalida" />
             Correo:
-            <v-text-field v-model="email" placeholder="Correo" :rule="validateEmail" />
+            <v-text-field v-model="email" placeholder="Correo" :rules="validateEmail" />
             Password:
-            <v-text-field v-model="pass" placeholder="Password" type="password" :rules="rPass" />
+            <v-text-field v-model="pass" placeholder="Password" type="password" :rules="validatePassword" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogNovo = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="novo(item)">
+          <v-btn color="blue" @click="novo(item)" :disabled="!formValid">
             Registrar
           </v-btn>
         </v-card-actions>
@@ -173,14 +173,27 @@ export default {
       dialogBorrado: false,
       idBorrar: '',
       dialogUpdate: false,
-      user: {},
+      selectedUser: {},
+      updateUser: {},
+      formValid: false,
       correo: '',
       password: '',
       validateEmail: [
         v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ],
       rNombre: [v => !v || v.length >= 3 || 'Nombre debe tener minimo 3 caracteres'],
-      rPass: [v => !v || v.length > 4 || 'Password minimo 4 caracteres'],
+      validatePassword: [
+        v => !v || /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/.test(v) || 'La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula y un dígito'
+      ],
+      validateTelefono: [
+        v => !v || /^\d{10}$/.test(v) || 'El teléfono debe tener 10 números'
+      ],
+      validateHoraEntrada: [
+        v => !v || /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v) || 'La hora de entrada debe tener el formato hh:mm a.m.'
+      ],
+      validateHoraSalida: [
+        v => !v || /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v) || 'La hora de salida debe tener el formato hh:mm a.m.'
+      ],
       dialogNovo: false,
       nv: {},
       nombre: '',
@@ -244,79 +257,97 @@ export default {
         })
     },
     dialogU (item) {
-      this.correo = item.email
-      this.user = item
-      console.log(this.user)
+      this.selectedUser = item
+      this.updateUser = { ...item }
+      console.log(this.selectedUser)
+      this.formValid = true
       this.dialogUpdate = true
     },
     async update () {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Access-Control-Allow-Origin': '*'
+      if (this.$refs.frmUpdate.validate()) {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
+          }
         }
+        console.log(this.updateUser)
+        const userUpdate = {
+          nombre: this.updateUser.nombre,
+          apellidos: this.updateUser.apellidos,
+          planta: this.updateUser.planta,
+          puesto: this.updateUser.puesto,
+          telefono: this.updateUser.telefono,
+          entrada: this.updateUser.horarioEntrada,
+          salida: this.updateUser.horarioSalida,
+          email: this.updateUser.email
+        }
+        await this.$axios.post('/actualizar', userUpdate, config)
+          .then((res) => {
+            console.log(res)
+            this.loadUsers()
+            this.dialogUpdate = false
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        this.formValid = false
       }
-      console.log(this.user)
-      const userUpdate = {
-        nombre: this.user.nombre,
-        apellidos: this.user.apellidos,
-        planta: this.user.planta,
-        puesto: this.user.puesto,
-        telefono: this.user.telefono,
-        entrada: this.user.horarioEntrada,
-        salida: this.user.horarioSalida,
-        email: this.correo
-      }
-      await this.$axios.post('/actualizar', userUpdate, config)
-        .then((res) => {
-          console.log(res)
-          this.loadUsers()
-          this.dialogUpdate = false
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     dialogCreate () {
+      this.nombre = ''
+      this.apellidos = ''
+      this.planta = ''
+      this.puesto = ''
+      this.telefono = ''
+      this.entrada = ''
+      this.salida = ''
+      this.email = ''
+      this.pass = ''
       this.dialogNovo = true
     },
     async novo () {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Access-Control-Allow-Origin': '*'
+      if (this.$refs.frmNovo.validate()) {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
+          }
         }
+        const userNovo = {
+          nombre: this.nombre,
+          apellidos: this.apellidos,
+          planta: this.planta,
+          puesto: this.puesto,
+          telefono: this.telefono,
+          entrada: this.entrada,
+          salida: this.salida,
+          email: this.email,
+          password: this.pass
+        }
+        console.log(userNovo)
+        await this.$axios.post('/insertar', userNovo, config)
+          .then((res) => {
+            console.log(res)
+            this.loadUsers()
+            this.dialogNovo = false
+            this.nombre = ''
+            this.apellidos = ''
+            this.planta = ''
+            this.puesto = ''
+            this.telefono = ''
+            this.entrada = ''
+            this.salida = ''
+            this.email = ''
+            this.pass = ''
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        this.formValid = false
       }
-      const userNovo = {
-        nombre: this.nombre,
-        apellidos: this.apellidos,
-        planta: this.planta,
-        puesto: this.puesto,
-        telefono: this.telefono,
-        entrada: this.entrada,
-        salida: this.salida,
-        email: this.email,
-        password: this.pass
-      }
-      console.log(userNovo)
-      await this.$axios.post('/insertar', userNovo, config)
-        .then((res) => {
-          console.log(res)
-          this.loadUsers()
-          this.dialogNovo = false
-          this.nombre = ''
-          this.apellidos = ''
-          this.planta = ''
-          this.puesto = ''
-          this.telefono = ''
-          this.entrada = ''
-          this.salida = ''
-          this.email = ''
-          this.pass = ''
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     }
   }
 }

@@ -52,28 +52,62 @@
       <v-card>
         <v-card-title>Actualizacion de Paciente</v-card-title>
         <v-card-text>
-          <v-form ref="frmUpdate">
+          <v-form ref="frmUpdate" v-model="formValid">
             Nombre:
-            <v-text-field v-model="user.nombre" placeholder="Nombre" :rules="rNombre" />
+            <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
             Apellidos:
-            <v-text-field v-model="user.apellidos" placeholder="Apellios" />
+            <v-text-field v-model="updateUser.apellidos" placeholder="Apellios" />
             Fecha Entrada:
-            <v-text-field v-model="user.fechaEntrada" placeholder="Fecha de Entrada" />
+            <v-menu
+              v-model="dateEntradaPicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              class="date-picker-menu"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="updateUser.fechaEntrada"
+                  v-on="on"
+                  placeholder="Fecha de Entrada"
+                  :rules="rFechaEntrada"
+                  readonly
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="updateUser.fechaEntrada" class="custom-date-picker" @change="dateEntradaPicker = false"></v-date-picker>
+            </v-menu>
             Fecha Salida:
-            <v-text-field v-model="user.fechaSalida" placeholder="Fecha de Salida" />
+            <v-menu
+              v-model="dateSalidaPicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              class="date-picker-menu"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="updateUser.fechaSalida"
+                  v-on="on"
+                  placeholder="Fecha de Salida"
+                  :rules="rFechaSalida"
+                  readonly
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="updateUser.fechaSalida" class="custom-date-picker" @change="dateSalidaPicker = false"></v-date-picker>
+            </v-menu>
             Habitacion:
-            <v-text-field v-model="user.habitacion" placeholder="Habitacion" />
+            <v-text-field v-model="updateUser.habitacion" placeholder="Habitacion" />
             Medico Encargado
-            <v-text-field v-model="user.medicoEncargado" placeholder="Medico Encargado" />
+            <v-text-field v-model="updateUser.medicoEncargado" placeholder="Medico Encargado" />
             Telefono de Emergencia:
-            <v-text-field v-model="user.telefonoEmergencia" placeholder="Telefono de Emergencia" />
+            <v-text-field v-model="updateUser.telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="updatePaciente">
+          <v-btn color="blue" @click="updatePaciente" :disabled="!formValid">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -83,7 +117,7 @@
       <v-card>
         <v-card-title>Nuevo Paciente</v-card-title>
         <v-card-text>
-          <v-form ref="frmNovo">
+          <v-form ref="frmNovo" v-model="formValid">
             ID:
             <v-text-field v-model="pacienteid" placeholder="ID del Paciente" :rules="rNombre" />
             Nombre:
@@ -91,22 +125,56 @@
             Apellidos:
             <v-text-field v-model="apellidos" placeholder="Apellios" />
             Fecha Entrada:
-            <v-text-field v-model="fechaEntrada" placeholder="Fecha de Entrada" />
+            <v-menu
+              v-model="showFechaEntradaPicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              class="date-picker-menu"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="fechaEntrada"
+                  v-on="on"
+                  placeholder="Fecha de Entrada"
+                  :rules="rFechaEntrada"
+                  readonly
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="fechaEntrada" class="custom-date-picker" @change="showFechaEntradaPicker = false"></v-date-picker>
+            </v-menu>
             Fecha Salida:
-            <v-text-field v-model="fechaSalida" placeholder="Fecha de Salida" />
+            <v-menu
+              v-model="showFechaSalidaPicker"
+              :close-on-content-click="false"
+              transition="scale-transition"
+              offset-y
+              class="date-picker-menu"
+            >
+              <template v-slot:activator="{ on }">
+                <v-text-field
+                  v-model="fechaSalida"
+                  v-on="on"
+                  placeholder="Fecha de Salida"
+                  :rules="rFechaSalida"
+                  readonly
+                ></v-text-field>
+              </template>
+              <v-date-picker v-model="fechaSalida" class="custom-date-picker" @change="showFechaSalidaPicker = false"></v-date-picker>
+            </v-menu>
             Habitacion:
             <v-text-field v-model="habitacion" placeholder="Habitacion" />
             Medico Encargado
             <v-text-field v-model="medicoEncargado" placeholder="Medico Encargado" />
             Telefono de Emergencia:
-            <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" />
+            <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogNovo = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="nuevoPaciente(item)">
+          <v-btn color="blue" @click="nuevoPaciente(item)" :disabled="!formValid">
             Registrar
           </v-btn>
         </v-card-actions>
@@ -119,6 +187,8 @@
 export default {
   data () {
     return {
+      showFechaEntradaPicker: false,
+      showFechaSalidaPicker: false,
       usuarios: [],
       item: [],
       headers: [
@@ -171,8 +241,16 @@ export default {
       dialogBorrado: false,
       idBorrar: '',
       dialogUpdate: false,
-      user: {},
+      selectedUser: {},
+      updateUser: {
+        fechaEntrada: '',
+        fechaSalida: ''
+      },
+      formValid: false,
       rNombre: [v => !v || v.length >= 3 || 'Nombre debe tener minimo 3 caracteres'],
+      rFechaEntrada: [v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v) || 'Fecha de Entrada debe tener el formato aaaa-mm-dd'],
+      rFechaSalida: [v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v) || 'Fecha de Salida debe tener el formato aaaa-mm-dd'],
+      rTelefonoEmergencia: [v => /^\d{10}$/.test(v) || 'Telefono de Emergencia debe contener 10 números'],
       dialogNovo: false,
       nv: {},
       telefonoEmergencia: '',
@@ -233,75 +311,93 @@ export default {
         })
     },
     dialogU (item) {
-      this.user = item
-      console.log(this.user)
+      this.selectedUser = item
+      this.updateUser = { ...item }
+      console.log(this.selectedUser)
+      this.formValid = true
       this.dialogUpdate = true
     },
     async updatePaciente () {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Access-Control-Allow-Origin': '*'
+      if (this.$refs.frmUpdate.validate()) {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
+          }
         }
+        const userUpdate = {
+          pacienteid: this.updateUser.pacienteid,
+          nombre: this.updateUser.nombre,
+          apellidos: this.updateUser.apellidos,
+          habitacion: this.updateUser.habitacion,
+          telefonoEmergencia: this.updateUser.telefonoEmergencia,
+          fechaEntrada: this.updateUser.fechaEntrada,
+          fechaSalida: this.updateUser.fechaSalida,
+          medicoEncargado: this.updateUser.medicoEncargado
+        }
+        await this.$axios.post('/actualizar_Paciente', userUpdate, config)
+          .then((res) => {
+            console.log(res)
+            this.loadPatients()
+            this.dialogUpdate = false
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        this.formValid = false
       }
-      const userUpdate = {
-        pacienteid: this.user.pacienteid,
-        nombre: this.user.nombre,
-        apellidos: this.user.apellidos,
-        habitacion: this.user.habitacion,
-        telefonoEmergencia: this.user.telefonoEmergencia,
-        fechaEntrada: this.user.fechaEntrada,
-        fechaSalida: this.user.fechaSalida,
-        medicoEncargado: this.user.medicoEncargado
-      }
-      await this.$axios.post('/actualizar_Paciente', userUpdate, config)
-        .then((res) => {
-          console.log(res)
-          this.loadPatients()
-          this.dialogUpdate = false
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     },
     dialogCreate () {
+      this.nombre = ''
+      this.pacienteid = ''
+      this.apellidos = ''
+      this.fechaEntrada = ''
+      this.fechaSalida = ''
+      this.habitacion = ''
+      this.medicoEncargado = ''
+      this.telefonoEmergencia = ''
       this.dialogNovo = true
     },
     async nuevoPaciente () {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Access-Control-Allow-Origin': '*'
+      if (this.$refs.frmNovo.validate()) {
+        const config = {
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*'
+          }
         }
+        const userNovo = {
+          pacienteid: this.pacienteid,
+          nombre: this.nombre,
+          apellidos: this.apellidos,
+          habitacion: this.habitacion,
+          telefonoEmergencia: this.telefonoEmergencia,
+          fechaEntrada: this.fechaEntrada,
+          fechaSalida: this.fechaSalida,
+          medicoEncargado: this.medicoEncargado
+        }
+        console.log(this.nv)
+        await this.$axios.post('/insertar_Paciente', userNovo, config)
+          .then((res) => {
+            console.log(res)
+            this.loadPatients()
+            this.dialogNovo = false
+            this.nombre = ''
+            this.pacienteid = ''
+            this.apellidos = ''
+            this.fechaEntrada = ''
+            this.fechaSalida = ''
+            this.habitacion = ''
+            this.medicoEncargado = ''
+            this.telefonoEmergencia = ''
+          })
+          .catch((err) => {
+            console.log(err)
+          })
+      } else {
+        this.formValid = false
       }
-      const userNovo = {
-        pacienteid: this.pacienteid,
-        nombre: this.nombre,
-        apellidos: this.apellidos,
-        habitacion: this.habitacion,
-        telefonoEmergencia: this.telefonoEmergencia,
-        fechaEntrada: this.fechaEntrada,
-        fechaSalida: this.fechaSalida,
-        medicoEncargado: this.medicoEncargado
-      }
-      console.log(this.nv)
-      await this.$axios.post('/insertar_Paciente', userNovo, config)
-        .then((res) => {
-          console.log(res)
-          this.loadPatients()
-          this.dialogNovo = false
-          this.nombre = ''
-          this.pacienteid = ''
-          this.apellidos = ''
-          this.fechaEntrada = ''
-          this.fechaSalida = ''
-          this.habitacion = ''
-          this.medicoEncargado = ''
-          this.telefonoEmergencia = ''
-        })
-        .catch((err) => {
-          console.log(err)
-        })
     }
   }
 }
@@ -310,5 +406,11 @@ export default {
   <style scoped>
   .principal{
     width: 100%;
+  }
+  .v-menu__content--fixed {
+    min-width: 290px!important;
+  }
+  .custom-date-picker .v-picker__body .v-date-picker-table .v-date-picker-table__current .v-btn__content {
+    color: #ffffff !important;
   }
   </style>
