@@ -27,7 +27,7 @@
         </v-data-table>
       </v-row>
     </v-col>
-    <v-btn block color="grey" @click="dialogCreate">
+    <v-btn block style="background-color: #789dca;" @click="dialogCreate">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="dialogBorrado" max-width="290" persistent>
@@ -53,27 +53,35 @@
         <v-card-title>Actualizacion de datos</v-card-title>
         <v-card-text>
           <v-form ref="frmUpdate" v-model="formValid">
-            Nombre:
-            <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
-            Apellidos:
-            <v-text-field v-model="updateUser.apellidos" placeholder="Apellidos" />
-            Planta:
-            <v-text-field v-model="updateUser.planta" placeholder="Planta" />
-            Ocupacion:
-            <v-text-field v-model="updateUser.puesto" placeholder="Puesto" />
-            Telefono:
-            <v-text-field v-model="updateUser.telefono" placeholder="Telefono" :rules="validateTelefono" />
-            Hora de entrada:
-            <v-text-field v-model="updateUser.horarioEntrada" placeholder="Entrada" :rules="validateHoraEntrada" />
-            Hora de salida:
-            <v-text-field v-model="updateUser.horarioSalida" placeholder="Salida" :rules="validateHoraSalida" />
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="6">
+                  Nombre:
+                  <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
+                  Apellidos:
+                  <v-text-field v-model="updateUser.apellidos" placeholder="Apellidos" />
+                  Planta:
+                  <v-text-field v-model="updateUser.planta" placeholder="Planta" />
+                  Ocupacion:
+                  <v-text-field v-model="updateUser.puesto" placeholder="Puesto" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  Telefono:
+                  <v-text-field v-model="updateUser.telefono" placeholder="Telefono" :rules="validateTelefono" />
+                  Hora de entrada:
+                  <v-text-field v-model="updateUser.horarioEntrada" placeholder="Entrada" :rules="validateHoraEntrada" />
+                  Hora de salida:
+                  <v-text-field v-model="updateUser.horarioSalida" placeholder="Salida" :rules="validateHoraSalida" />
+                </v-col>
+              </v-row>
+            </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="update" :disabled="!formValid">
+          <v-btn color="blue" :disabled="!formValid" @click="update">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -84,31 +92,39 @@
         <v-card-title>Nuevo Usuario</v-card-title>
         <v-card-text>
           <v-form ref="frmNovo" v-model="formValid">
-            Nombre:
-            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
-            Apellidos:
-            <v-text-field v-model="apellidos" placeholder="Apellidos" />
-            Planta:
-            <v-text-field v-model="planta" placeholder="Planta" />
-            Puesto:
-            <v-text-field v-model="puesto" placeholder="Puesto" />
-            Telefono:
-            <v-text-field v-model="telefono" placeholder="Telefono" :rules="validateTelefono" />
-            Hora de entrada:
-            <v-text-field v-model="entrada" placeholder="Entrada" :rules="validateHoraEntrada" />
-            Hora de salida:
-            <v-text-field v-model="salida" placeholder="Salida" :rules="validateHoraSalida" />
-            Correo:
-            <v-text-field v-model="email" placeholder="Correo" :rules="validateEmail" />
-            Password:
-            <v-text-field v-model="pass" placeholder="Password" type="password" :rules="validatePassword" />
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="6">
+                  Nombre:
+                  <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
+                  Apellidos:
+                  <v-text-field v-model="apellidos" placeholder="Apellidos" />
+                  Planta:
+                  <v-text-field v-model="planta" placeholder="Planta" />
+                  Puesto:
+                  <v-text-field v-model="puesto" placeholder="Puesto" />
+                  Telefono:
+                  <v-text-field v-model="telefono" placeholder="Telefono" :rules="validateTelefono" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  Hora de entrada:
+                  <v-text-field v-model="entrada" placeholder="Entrada" :rules="validateHoraEntrada" />
+                  Hora de salida:
+                  <v-text-field v-model="salida" placeholder="Salida" :rules="validateHoraSalida" />
+                  Correo:
+                  <v-text-field v-model="email" placeholder="Correo" :rules="validateEmail" />
+                  Password:
+                  <v-text-field v-model="pass" placeholder="Password" type="password" :rules="validatePassword" />
+                </v-col>
+              </v-row>
+            </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogNovo = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="novo(item)" :disabled="!formValid">
+          <v-btn color="blue" :disabled="!formValid" @click="novo(item)">
             Registrar
           </v-btn>
         </v-card-actions>

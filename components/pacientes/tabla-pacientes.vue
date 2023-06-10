@@ -27,7 +27,7 @@
         </v-data-table>
       </v-row>
     </v-col>
-    <v-btn block color="grey" @click="dialogCreate">
+    <v-btn block style="background-color: #789dca;" @click="dialogCreate">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="dialogBorrado" max-width="290" persistent>
@@ -53,61 +53,69 @@
         <v-card-title>Actualizacion de Paciente</v-card-title>
         <v-card-text>
           <v-form ref="frmUpdate" v-model="formValid">
-            Nombre:
-            <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
-            Apellidos:
-            <v-text-field v-model="updateUser.apellidos" placeholder="Apellios" />
-            Fecha Entrada:
-            <v-menu
-              v-model="dateEntradaPicker"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              class="date-picker-menu"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="updateUser.fechaEntrada"
-                  v-on="on"
-                  placeholder="Fecha de Entrada"
-                  :rules="rFechaEntrada"
-                  readonly
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="updateUser.fechaEntrada" class="custom-date-picker" @change="dateEntradaPicker = false"></v-date-picker>
-            </v-menu>
-            Fecha Salida:
-            <v-menu
-              v-model="dateSalidaPicker"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              class="date-picker-menu"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="updateUser.fechaSalida"
-                  v-on="on"
-                  placeholder="Fecha de Salida"
-                  :rules="rFechaSalida"
-                  readonly
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="updateUser.fechaSalida" class="custom-date-picker" @change="dateSalidaPicker = false"></v-date-picker>
-            </v-menu>
-            Habitacion:
-            <v-text-field v-model="updateUser.habitacion" placeholder="Habitacion" />
-            Medico Encargado
-            <v-text-field v-model="updateUser.medicoEncargado" placeholder="Medico Encargado" />
-            Telefono de Emergencia:
-            <v-text-field v-model="updateUser.telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
+            <v-container>
+              <v-row>
+                <v-col cols="12" md="6">
+                  Nombre:
+                  <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
+                  Apellidos:
+                  <v-text-field v-model="updateUser.apellidos" placeholder="Apellios" />
+                  Fecha Entrada:
+                  <v-menu
+                    v-model="dateEntradaPicker"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    class="date-picker-menu"
+                  >
+                    <template #activator="{ on }">
+                      <v-text-field
+                        v-model="updateUser.fechaEntrada"
+                        placeholder="Fecha de Entrada"
+                        :rules="rFechaEntrada"
+                        readonly
+                        v-on="on"
+                      />
+                    </template>
+                    <v-date-picker v-model="updateUser.fechaEntrada" class="custom-date-picker" @change="dateEntradaPicker = false" />
+                  </v-menu>
+                  Fecha Salida:
+                  <v-menu
+                    v-model="dateSalidaPicker"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    class="date-picker-menu"
+                  >
+                    <template #activator="{ on }">
+                      <v-text-field
+                        v-model="updateUser.fechaSalida"
+                        placeholder="Fecha de Salida"
+                        :rules="rFechaSalida"
+                        readonly
+                        v-on="on"
+                      />
+                    </template>
+                    <v-date-picker v-model="updateUser.fechaSalida" class="custom-date-picker" @change="dateSalidaPicker = false" />
+                  </v-menu>
+                </v-col>
+                <v-col cols="12" md="6">
+                  Habitacion:
+                  <v-text-field v-model="updateUser.habitacion" placeholder="Habitacion" />
+                  Medico Encargado
+                  <v-text-field v-model="updateUser.medicoEncargado" placeholder="Medico Encargado" />
+                  Telefono de Emergencia:
+                  <v-text-field v-model="updateUser.telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
+                </v-col>
+              </v-row>
+            </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="updatePaciente" :disabled="!formValid">
+          <v-btn color="blue" :disabled="!formValid" @click="updatePaciente">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -118,63 +126,71 @@
         <v-card-title>Nuevo Paciente</v-card-title>
         <v-card-text>
           <v-form ref="frmNovo" v-model="formValid">
-            ID:
-            <v-text-field v-model="pacienteid" placeholder="ID del Paciente" :rules="rNombre" />
-            Nombre:
-            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
-            Apellidos:
-            <v-text-field v-model="apellidos" placeholder="Apellios" />
-            Fecha Entrada:
-            <v-menu
-              v-model="showFechaEntradaPicker"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              class="date-picker-menu"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="fechaEntrada"
-                  v-on="on"
-                  placeholder="Fecha de Entrada"
-                  :rules="rFechaEntrada"
-                  readonly
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="fechaEntrada" class="custom-date-picker" @change="showFechaEntradaPicker = false"></v-date-picker>
-            </v-menu>
-            Fecha Salida:
-            <v-menu
-              v-model="showFechaSalidaPicker"
-              :close-on-content-click="false"
-              transition="scale-transition"
-              offset-y
-              class="date-picker-menu"
-            >
-              <template v-slot:activator="{ on }">
-                <v-text-field
-                  v-model="fechaSalida"
-                  v-on="on"
-                  placeholder="Fecha de Salida"
-                  :rules="rFechaSalida"
-                  readonly
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="fechaSalida" class="custom-date-picker" @change="showFechaSalidaPicker = false"></v-date-picker>
-            </v-menu>
-            Habitacion:
-            <v-text-field v-model="habitacion" placeholder="Habitacion" />
-            Medico Encargado
-            <v-text-field v-model="medicoEncargado" placeholder="Medico Encargado" />
-            Telefono de Emergencia:
-            <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
+            <v-container>
+              <v-row>
+                <v-col cols="12" dm="6">
+                  ID:
+                  <v-text-field v-model="pacienteid" placeholder="ID del Paciente" :rules="rNombre" />
+                  Nombre:
+                  <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
+                  Apellidos:
+                  <v-text-field v-model="apellidos" placeholder="Apellios" />
+                  Habitacion:
+                  <v-text-field v-model="habitacion" placeholder="Habitacion" />
+                </v-col>
+                <v-col cols="12" md="6">
+                  Fecha Entrada:
+                  <v-menu
+                    v-model="showFechaEntradaPicker"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    class="date-picker-menu"
+                  >
+                    <template #activator="{ on }">
+                      <v-text-field
+                        v-model="fechaEntrada"
+                        placeholder="Fecha de Entrada"
+                        :rules="rFechaEntrada"
+                        readonly
+                        v-on="on"
+                      />
+                    </template>
+                    <v-date-picker v-model="fechaEntrada" class="custom-date-picker" @change="showFechaEntradaPicker = false" />
+                  </v-menu>
+                  Fecha Salida:
+                  <v-menu
+                    v-model="showFechaSalidaPicker"
+                    :close-on-content-click="false"
+                    transition="scale-transition"
+                    offset-y
+                    class="date-picker-menu"
+                  >
+                    <template #activator="{ on }">
+                      <v-text-field
+                        v-model="fechaSalida"
+                        placeholder="Fecha de Salida"
+                        :rules="rFechaSalida"
+                        readonly
+                        v-on="on"
+                      />
+                    </template>
+                    <v-date-picker v-model="fechaSalida" class="custom-date-picker" @change="showFechaSalidaPicker = false" />
+                  </v-menu>
+                  Medico Encargado
+                  <v-text-field v-model="medicoEncargado" placeholder="Medico Encargado" />
+                  Telefono de Emergencia:
+                  <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
+                </v-col>
+              </v-row>
+            </v-container>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogNovo = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="nuevoPaciente(item)" :disabled="!formValid">
+          <v-btn color="blue" :disabled="!formValid" @click="nuevoPaciente(item)">
             Registrar
           </v-btn>
         </v-card-actions>

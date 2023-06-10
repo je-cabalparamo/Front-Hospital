@@ -6,6 +6,7 @@
       :clipped="clipped"
       fixed
       app
+      style="background-color: #2ca880;"
     >
       <v-list>
         <v-list-item
@@ -28,9 +29,10 @@
       :clipped-left="clipped"
       fixed
       app
+      style="background-color: #789dca;"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <!--<v-btn
+      <!--<v-bt
         icon
         @click.stop="miniVariant = !miniVariant"
       >
@@ -51,7 +53,7 @@
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
     </v-app-bar>
-    <v-main>
+    <v-main style="background-color: #b3cf99;">
       <v-container>
         <Nuxt />
       </v-container>
@@ -59,6 +61,7 @@
     <v-footer
       :absolute="!fixed"
       app
+      style="background-color: #789dca;"
     >
       <span>&copy; Lenguajes modernos de programacion | DICIS Enero-Diciembre {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -103,3 +106,11 @@ export default {
   }
 }
 </script>
+<style scoped>
+h1 {
+  font-size: 20px;
+}
+v-app-bar {
+  background-color: #789dca;
+}
+</style>
