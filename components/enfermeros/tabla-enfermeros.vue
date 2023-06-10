@@ -10,7 +10,7 @@
           :items="usuarios"
           style="width: 100%;"
         >
-          <template #[`item.acciones`]="{ item }">
+          <template v-if="loggedInEmail === 'director@hospital.com'" #[`item.acciones`]="{ item }">
             <v-row>
               <v-col cols="6">
                 <v-btn icon color="blue" @click="dialogU(item)">
@@ -130,6 +130,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    </v-btn>
   </v-row>
 </template>
 
@@ -137,6 +138,7 @@
 export default {
   data () {
     return {
+      loggedInEmail: localStorage.getItem('loggedInEmail'),
       usuarios: [],
       item: [],
       headers: [
@@ -192,23 +194,29 @@ export default {
       selectedUser: {},
       updateUser: {},
       formValid: false,
+      formUpdtValid: false,
       correo: '',
       password: '',
       validateEmail: [
-        v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+        v => (!!v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || 'E-mail must be valid'
       ],
-      rNombre: [v => !v || v.length >= 3 || 'Nombre debe tener minimo 3 caracteres'],
+      requiredRule: [
+        v => (!!v) || 'Campo requerido'
+      ],
+      rNombre: [
+        v => (!!v && v.length >= 3) || 'Nombre debe tener mínimo 3 caracteres'
+      ],
       validatePassword: [
-        v => !v || /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/.test(v) || 'La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula y un dígito'
+        v => (!!v && /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/.test(v)) || 'La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula y un dígito'
       ],
       validateTelefono: [
-        v => !v || /^\d{10}$/.test(v) || 'El teléfono debe tener 10 números'
+        v => (!!v && /^\d{10}$/.test(v)) || 'El teléfono debe tener 10 números'
       ],
       validateHoraEntrada: [
-        v => !v || /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v) || 'La hora de entrada debe tener el formato hh:mm a.m.'
+        v => (!!v && /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v)) || 'La hora de entrada debe tener el formato hh:mm a.m.'
       ],
       validateHoraSalida: [
-        v => !v || /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v) || 'La hora de salida debe tener el formato hh:mm a.m.'
+        v => (!!v && /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v)) || 'La hora de salida debe tener el formato hh:mm a.m.'
       ],
       dialogNovo: false,
       nv: {},
@@ -258,15 +266,10 @@ export default {
       console.log(sendData)
       await this.$axios.post('/eliminar', sendData, config)
         .then((res) => {
+          this.$toast.success(res.data.alert)
           console.log(res)
-          if (res.data.alert === 'Success...') {
-            this.dialogBorrado = false
-            this.loadUsers()
-          } else {
-            this.dialogBorrado = false
-            this.loadUsers()
-            // alert(res.data.data)
-          }
+          this.dialogBorrado = false
+          this.loadUsers()
         })
         .catch((e) => {
           console.log(e)
@@ -276,7 +279,7 @@ export default {
       this.selectedUser = item
       this.updateUser = { ...item }
       console.log(this.selectedUser)
-      this.formValid = true
+      this.formUpdtValid = true
       this.dialogUpdate = true
     },
     async update () {
@@ -300,6 +303,7 @@ export default {
         }
         await this.$axios.post('/actualizar', userUpdate, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadUsers()
             this.dialogUpdate = false
@@ -308,7 +312,7 @@ export default {
             console.log(err)
           })
       } else {
-        this.formValid = false
+        this.formUpdtValid = false
       }
     },
     dialogCreate () {
@@ -321,6 +325,7 @@ export default {
       this.salida = ''
       this.email = ''
       this.pass = ''
+      this.formValid = false
       this.dialogNovo = true
     },
     async novo () {
@@ -345,6 +350,7 @@ export default {
         console.log(userNovo)
         await this.$axios.post('/insertar', userNovo, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadUsers()
             this.dialogNovo = false

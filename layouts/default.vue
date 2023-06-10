@@ -32,6 +32,7 @@
       style="background-color: #789dca;"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+<<<<<<< HEAD
       <!--<v-bt
         icon
         @click.stop="miniVariant = !miniVariant"
@@ -50,8 +51,13 @@
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>-->
+=======
+>>>>>>> 5e93864718b89af6c425c5d16e5b3fc873e3c729
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
+      <v-btn v-if="$auth.loggedIn" icon @click="logout">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main style="background-color: #b3cf99;">
       <v-container>
@@ -102,6 +108,14 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Hospital DICIS'
+    }
+  },
+  methods: {
+    logout () {
+      localStorage.removeItem('loggedInEmail')
+      localStorage.removeItem('loggedInTable')
+      this.$auth.reset()
+      this.$router.push('/')
     }
   }
 }

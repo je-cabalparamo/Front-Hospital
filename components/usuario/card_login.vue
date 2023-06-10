@@ -29,11 +29,6 @@
           Ingresar
         </v-btn>
       </v-card-actions>
-      <v-card-actions>
-        <v-btn block @click="registrar">
-          Registrar
-        </v-btn>
-      </v-card-actions>
     </v-card>
     <v-dialog v-model="dialog" width="200" transition="dialog-bottom-transition">
       <div style="width: 100%; height: 100px; background-color: red;">
@@ -61,6 +56,11 @@ export default {
       mensaje: ''
     }
   },
+  mounted () {
+    if (this.$auth.loggedIn) {
+      this.$router.push('/dashboard')
+    }
+  },
   methods: {
     async ingresarSistema () {
       if (this.email.length === 0 || this.password.length === 0) {
@@ -81,7 +81,7 @@ export default {
             localStorage.setItem('loggedInTable', res.data.fromTable)
             this.$router.push('/dashboard')
           } else {
-            alert(res.data.alert)
+            this.$toast.error(res.data.alert)
           }
           console.log(await (res))
         }).catch((error) => {
@@ -93,11 +93,8 @@ export default {
           console.log(error)
         })
       } else {
-        alert('Error en parametros')
+        this.$toast.error('Error en parametros')
       }
-    },
-    registrar () {
-      this.$router.push('/Registro')
     }
   }
 }

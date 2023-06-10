@@ -262,11 +262,15 @@ export default {
         fechaEntrada: '',
         fechaSalida: ''
       },
+      dateEntradaPicker: false,
+      dateSalidaPicker: false,
       formValid: false,
-      rNombre: [v => !v || v.length >= 3 || 'Nombre debe tener minimo 3 caracteres'],
-      rFechaEntrada: [v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v) || 'Fecha de Entrada debe tener el formato aaaa-mm-dd'],
-      rFechaSalida: [v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v) || 'Fecha de Salida debe tener el formato aaaa-mm-dd'],
-      rTelefonoEmergencia: [v => /^\d{10}$/.test(v) || 'Telefono de Emergencia debe contener 10 números'],
+      formUpdtValid: false,
+      rNombre: [v => (!!v && v.length >= 3) || 'Nombre debe tener minimo 3 caracteres'],
+      requiredRule: [v => (!!v) || 'Campo requerido'],
+      rFechaEntrada: [v => (!!v && /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v)) || 'Fecha de Entrada debe tener el formato aaaa-mm-dd'],
+      rFechaSalida: [v => (!!v && /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v)) || 'Fecha de Salida debe tener el formato aaaa-mm-dd'],
+      rTelefonoEmergencia: [v => (!!v && /^\d{10}$/.test(v)) || 'Telefono de Emergencia debe contener 10 números'],
       dialogNovo: false,
       nv: {},
       telefonoEmergencia: '',
@@ -313,14 +317,10 @@ export default {
       }
       await this.$axios.post('/eliminar_Paciente', sendData, config)
         .then((res) => {
+          this.$toast.success(res.data.alert)
           console.log(res)
-          if (res.data.error === null) {
-            this.dialogBorrado = false
-            this.loadPatients()
-          } else {
-            this.dialogBorrado = false
-            this.loadPatients()
-          }
+          this.dialogBorrado = false
+          this.loadPatients()
         })
         .catch((e) => {
           console.log(e)
@@ -330,7 +330,7 @@ export default {
       this.selectedUser = item
       this.updateUser = { ...item }
       console.log(this.selectedUser)
-      this.formValid = true
+      this.formUpdtValid = true
       this.dialogUpdate = true
     },
     async updatePaciente () {
@@ -353,6 +353,7 @@ export default {
         }
         await this.$axios.post('/actualizar_Paciente', userUpdate, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadPatients()
             this.dialogUpdate = false
@@ -361,7 +362,7 @@ export default {
             console.log(err)
           })
       } else {
-        this.formValid = false
+        this.formUpdtValid = false
       }
     },
     dialogCreate () {
@@ -396,6 +397,7 @@ export default {
         console.log(this.nv)
         await this.$axios.post('/insertar_Paciente', userNovo, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadPatients()
             this.dialogNovo = false
