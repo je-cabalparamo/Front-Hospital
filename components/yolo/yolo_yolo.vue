@@ -5,8 +5,12 @@
     </v-btn>
     <div v-if="$auth.loggedIn">
       <p>Bienvenido(a), {{ getGreetingMessage() }}</p>
+      <v-btn block @click="logout">
+        Logout
+      </v-btn>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -31,6 +35,12 @@ export default {
       console.log(this.$auth)
       console.log(this.$auth.loggedIn)
       console.log(this.$auth.user)
+    },
+    logout () {
+      localStorage.removeItem('loggedInEmail')
+      localStorage.removeItem('loggedInTable')
+      this.$auth.reset()
+      this.$router.push('/')
     }
   }
 }

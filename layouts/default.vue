@@ -30,26 +30,11 @@
       app
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <!--<v-btn
-        icon
-        @click.stop="miniVariant = !miniVariant"
-      >
-        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
-      </v-btn>-->
-      <!--<v-btn
-        icon
-        @click.stop="clipped = !clipped"
-      >
-        <v-icon>mdi-application</v-icon>
-      </v-btn>-->
-      <!--<v-btn
-        icon
-        @click.stop="fixed = !fixed"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>-->
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
+      <v-btn v-if="$auth.loggedIn" icon @click="logout">
+        <v-icon>mdi-logout</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container>
@@ -99,6 +84,14 @@ export default {
       right: true,
       rightDrawer: false,
       title: 'Hospital DICIS'
+    }
+  },
+  methods: {
+    logout () {
+      localStorage.removeItem('loggedInEmail')
+      localStorage.removeItem('loggedInTable')
+      this.$auth.reset()
+      this.$router.push('/')
     }
   }
 }

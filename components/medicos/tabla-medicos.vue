@@ -10,7 +10,7 @@
           :items="medicos"
           style="width: 100%;"
         >
-          <template #[`item.acciones`]="{ item }">
+          <template v-if="loggedInEmail === 'director@hospital.com'" #[`item.acciones`]="{ item }">
             <v-row>
               <v-col cols="6">
                 <v-btn icon color="blue" @click="dialogU(item)">
@@ -27,7 +27,7 @@
         </v-data-table>
       </v-row>
     </v-col>
-    <v-btn block color="grey" @click="dialogCreate">
+    <v-btn v-if="loggedInEmail === 'director@hospital.com'" block color="grey" @click="dialogCreate">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="dialogBorrado" max-width="290" persistent>
@@ -53,30 +53,30 @@
       <v-card>
         <v-card-title>Actualización de datos</v-card-title>
         <v-card-text>
-          <v-form ref="frmUpdate" v-model="formValid">
+          <v-form ref="frmUpdate" v-model="formUpdtValid">
             Nombre:
-            <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
+            <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre"/>
             Apellido:
-            <v-text-field v-model="updateUser.apellido" placeholder="Apellido" />
+            <v-text-field v-model="updateUser.apellido" placeholder="Apellido" :rules="requiredRule"/>
             Email:
-            <v-text-field v-model="updateUser.email" placeholder="Email" :rules="validateEmail" />
+            <v-text-field v-model="updateUser.email" placeholder="Email" :rules="validateEmail"/>
             Teléfono:
-            <v-text-field v-model="updateUser.telefono" placeholder="Teléfono" :rules="validateTelefono" />
+            <v-text-field v-model="updateUser.telefono" placeholder="Teléfono" :rules="validateTelefono"/>
             Consultorio:
-            <v-text-field v-model="updateUser.consultorio" placeholder="Consultorio" />
+            <v-text-field v-model="updateUser.consultorio" placeholder="Consultorio" :rules="requiredRule"/>
             Especialidad:
-            <v-text-field v-model="updateUser.especialidad" placeholder="Especialidad" />
+            <v-text-field v-model="updateUser.especialidad" placeholder="Especialidad" :rules="requiredRule"/>
             Hora de entrada:
-            <v-text-field v-model="updateUser.horarioEntrada" placeholder="Entrada" :rules="validateHoraEntrada" />
+            <v-text-field v-model="updateUser.horarioEntrada" placeholder="Entrada" :rules="validateHoraEntrada"/>
             Hora de salida:
-            <v-text-field v-model="updateUser.horarioSalida" placeholder="Salida" :rules="validateHoraSalida" />
+            <v-text-field v-model="updateUser.horarioSalida" placeholder="Salida" :rules="validateHoraSalida"/>
           </v-form>
         </v-card-text>
         <v-card-actions>
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="update" :disabled="!formValid">
+          <v-btn color="blue" @click="update" :disabled="!formUpdtValid">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -88,23 +88,23 @@
         <v-card-text>
           <v-form ref="frmNovo" v-model="formValid">
             Nombre:
-            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
+            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre"/>
             Apellido:
-            <v-text-field v-model="apellido" placeholder="Apellido" />
+            <v-text-field v-model="apellido" placeholder="Apellido" :rules="requiredRule"/>
             Email:
-            <v-text-field v-model="email" placeholder="Email" :rules="validateEmail" />
+            <v-text-field v-model="email" placeholder="Email" :rules="validateEmail"/>
             Password:
-            <v-text-field v-model="pass" placeholder="Password" type="password" :rules="validatePassword" />
+            <v-text-field v-model="pass" placeholder="Password" type="password" :rules="validatePassword"/>
             Teléfono:
-            <v-text-field v-model="telefono" placeholder="Teléfono" :rules="validateTelefono" />
+            <v-text-field v-model="telefono" placeholder="Teléfono" :rules="validateTelefono"/>
             Consultorio:
-            <v-text-field v-model="consultorio" placeholder="Consultorio" />
+            <v-text-field v-model="consultorio" placeholder="Consultorio" :rules="requiredRule"/>
             Especialidad:
-            <v-text-field v-model="especialidad" placeholder="Especialidad" />
+            <v-text-field v-model="especialidad" placeholder="Especialidad" :rules="requiredRule"/>
             Hora de entrada:
-            <v-text-field v-model="entrada" placeholder="Entrada" :rules="validateHoraEntrada" />
+            <v-text-field v-model="entrada" placeholder="Entrada" :rules="validateHoraEntrada"/>
             Hora de salida:
-            <v-text-field v-model="salida" placeholder="Salida" :rules="validateHoraSalida" />
+            <v-text-field v-model="salida" placeholder="Salida" :rules="validateHoraSalida"/>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -124,6 +124,7 @@
 export default {
   data () {
     return {
+      loggedInEmail: localStorage.getItem('loggedInEmail'),
       medicos: [],
       item: [],
       headers: [
@@ -179,23 +180,29 @@ export default {
       selectedUser: {},
       updateUser: {},
       formValid: false,
+      formUpdtValid: false,
       correo: '',
       password: '',
       validateEmail: [
-        v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'El correo electrónico debe ser válido'
+        v => (!!v && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) || 'E-mail must be valid'
       ],
-      rNombre: [v => !v || v.length >= 3 || 'El nombre debe tener al menos 3 caracteres'],
+      requiredRule: [
+        v => (!!v) || 'Campo requerido'
+      ],
+      rNombre: [
+        v => (!!v && v.length >= 3) || 'Nombre debe tener mínimo 3 caracteres'
+      ],
       validatePassword: [
-        v => !v || /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/.test(v) || 'La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula y un dígito'
+        v => (!!v && /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]{8,}$/.test(v)) || 'La contraseña debe tener al menos 8 caracteres y contener al menos una mayúscula y un dígito'
       ],
       validateTelefono: [
-        v => !v || /^\d{10}$/.test(v) || 'El teléfono debe tener 10 números'
+        v => (!!v && /^\d{10}$/.test(v)) || 'El teléfono debe tener 10 números'
       ],
       validateHoraEntrada: [
-        v => !v || /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v) || 'La hora de entrada debe tener el formato hh:mm a.m.'
+        v => (!!v && /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v)) || 'La hora de entrada debe tener el formato hh:mm a.m.'
       ],
       validateHoraSalida: [
-        v => !v || /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v) || 'La hora de salida debe tener el formato hh:mm a.m.'
+        v => (!!v && /^(0?[1-9]|1[0-2]):[0-5][0-9] [ap]\.m\.$/.test(v)) || 'La hora de salida debe tener el formato hh:mm a.m.'
       ],
       dialogNovo: false,
       nv: {},
@@ -247,14 +254,10 @@ export default {
       console.log(sendData)
       await this.$axios.post('/eliminarMedico', sendData, config)
         .then((res) => {
+          this.$toast.success(res.data.alert)
           console.log(res)
-          if (res.data.error === null) {
-            this.dialogBorrado = false
-            this.loadMedicos()
-          } else {
-            this.dialogBorrado = false
-            this.loadMedicos()
-          }
+          this.dialogBorrado = false
+          this.loadMedicos()
         })
         .catch((e) => {
           console.log(e)
@@ -264,7 +267,7 @@ export default {
       this.selectedUser = item
       this.updateUser = { ...item }
       console.log(this.selectedUser)
-      this.formValid = true
+      this.formUpdtValid = true
       this.dialogUpdate = true
     },
     async update () {
@@ -289,6 +292,7 @@ export default {
         console.log('Actualiza: ', userUpdate)
         await this.$axios.post('/actualizarMedico', userUpdate, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadMedicos()
             this.dialogUpdate = false
@@ -297,7 +301,7 @@ export default {
             console.log(err)
           })
       } else {
-        this.formValid = false
+        this.formUpdtValid = false
       }
     },
     dialogCreate () {
@@ -310,6 +314,7 @@ export default {
       this.salida = ''
       this.email = ''
       this.pass = ''
+      this.formValid = false
       this.dialogNovo = true
     },
     async novo () {
@@ -334,6 +339,7 @@ export default {
         console.log(userNovo)
         await this.$axios.post('/insertarMedico', userNovo, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadMedicos()
             this.dialogNovo = false

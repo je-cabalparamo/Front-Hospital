@@ -52,11 +52,11 @@
       <v-card>
         <v-card-title>Actualizacion de Paciente</v-card-title>
         <v-card-text>
-          <v-form ref="frmUpdate" v-model="formValid">
+          <v-form ref="frmUpdate" v-model="formUpdtValid">
             Nombre:
             <v-text-field v-model="updateUser.nombre" placeholder="Nombre" :rules="rNombre" />
             Apellidos:
-            <v-text-field v-model="updateUser.apellidos" placeholder="Apellios" />
+            <v-text-field v-model="updateUser.apellidos" placeholder="Apellios" :rules="requiredRule" />
             Fecha Entrada:
             <v-menu
               v-model="dateEntradaPicker"
@@ -96,9 +96,9 @@
               <v-date-picker v-model="updateUser.fechaSalida" class="custom-date-picker" @change="dateSalidaPicker = false"></v-date-picker>
             </v-menu>
             Habitacion:
-            <v-text-field v-model="updateUser.habitacion" placeholder="Habitacion" />
+            <v-text-field v-model="updateUser.habitacion" placeholder="Habitacion" :rules="requiredRule" />
             Medico Encargado
-            <v-text-field v-model="updateUser.medicoEncargado" placeholder="Medico Encargado" />
+            <v-text-field v-model="updateUser.medicoEncargado" placeholder="Medico Encargado" :rules="requiredRule" />
             Telefono de Emergencia:
             <v-text-field v-model="updateUser.telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
           </v-form>
@@ -107,7 +107,7 @@
           <v-btn color="red" @click="dialogUpdate = false">
             Cancelar
           </v-btn>
-          <v-btn color="blue" @click="updatePaciente" :disabled="!formValid">
+          <v-btn color="blue" @click="updatePaciente" :disabled="!formUpdtValid">
             Actualizar
           </v-btn>
         </v-card-actions>
@@ -119,11 +119,11 @@
         <v-card-text>
           <v-form ref="frmNovo" v-model="formValid">
             ID:
-            <v-text-field v-model="pacienteid" placeholder="ID del Paciente" :rules="rNombre" />
+            <v-text-field v-model="pacienteid" placeholder="ID del Paciente" :rules="rNombre"/>
             Nombre:
-            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre" />
+            <v-text-field v-model="nombre" placeholder="Nombre" :rules="rNombre"/>
             Apellidos:
-            <v-text-field v-model="apellidos" placeholder="Apellios" />
+            <v-text-field v-model="apellidos" placeholder="Apellios" :rules="requiredRule"/>
             Fecha Entrada:
             <v-menu
               v-model="showFechaEntradaPicker"
@@ -163,11 +163,11 @@
               <v-date-picker v-model="fechaSalida" class="custom-date-picker" @change="showFechaSalidaPicker = false"></v-date-picker>
             </v-menu>
             Habitacion:
-            <v-text-field v-model="habitacion" placeholder="Habitacion" />
+            <v-text-field v-model="habitacion" placeholder="Habitacion" :rules="requiredRule"/>
             Medico Encargado
-            <v-text-field v-model="medicoEncargado" placeholder="Medico Encargado" />
+            <v-text-field v-model="medicoEncargado" placeholder="Medico Encargado" :rules="requiredRule"/>
             Telefono de Emergencia:
-            <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia" />
+            <v-text-field v-model="telefonoEmergencia" placeholder="Telefono de Emergencia" :rules="rTelefonoEmergencia"/>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -246,11 +246,15 @@ export default {
         fechaEntrada: '',
         fechaSalida: ''
       },
+      dateEntradaPicker: false,
+      dateSalidaPicker: false,
       formValid: false,
-      rNombre: [v => !v || v.length >= 3 || 'Nombre debe tener minimo 3 caracteres'],
-      rFechaEntrada: [v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v) || 'Fecha de Entrada debe tener el formato aaaa-mm-dd'],
-      rFechaSalida: [v => /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v) || 'Fecha de Salida debe tener el formato aaaa-mm-dd'],
-      rTelefonoEmergencia: [v => /^\d{10}$/.test(v) || 'Telefono de Emergencia debe contener 10 números'],
+      formUpdtValid: false,
+      rNombre: [v => (!!v && v.length >= 3) || 'Nombre debe tener minimo 3 caracteres'],
+      requiredRule: [v => (!!v) || 'Campo requerido'],
+      rFechaEntrada: [v => (!!v && /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v)) || 'Fecha de Entrada debe tener el formato aaaa-mm-dd'],
+      rFechaSalida: [v => (!!v && /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/.test(v)) || 'Fecha de Salida debe tener el formato aaaa-mm-dd'],
+      rTelefonoEmergencia: [v => (!!v && /^\d{10}$/.test(v)) || 'Telefono de Emergencia debe contener 10 números'],
       dialogNovo: false,
       nv: {},
       telefonoEmergencia: '',
@@ -297,14 +301,10 @@ export default {
       }
       await this.$axios.post('/eliminar_Paciente', sendData, config)
         .then((res) => {
+          this.$toast.success(res.data.alert)
           console.log(res)
-          if (res.data.error === null) {
-            this.dialogBorrado = false
-            this.loadPatients()
-          } else {
-            this.dialogBorrado = false
-            this.loadPatients()
-          }
+          this.dialogBorrado = false
+          this.loadPatients()
         })
         .catch((e) => {
           console.log(e)
@@ -314,7 +314,7 @@ export default {
       this.selectedUser = item
       this.updateUser = { ...item }
       console.log(this.selectedUser)
-      this.formValid = true
+      this.formUpdtValid = true
       this.dialogUpdate = true
     },
     async updatePaciente () {
@@ -337,6 +337,7 @@ export default {
         }
         await this.$axios.post('/actualizar_Paciente', userUpdate, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadPatients()
             this.dialogUpdate = false
@@ -345,7 +346,7 @@ export default {
             console.log(err)
           })
       } else {
-        this.formValid = false
+        this.formUpdtValid = false
       }
     },
     dialogCreate () {
@@ -380,6 +381,7 @@ export default {
         console.log(this.nv)
         await this.$axios.post('/insertar_Paciente', userNovo, config)
           .then((res) => {
+            this.$toast.success(res.data.alert)
             console.log(res)
             this.loadPatients()
             this.dialogNovo = false
