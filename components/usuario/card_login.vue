@@ -67,7 +67,7 @@ export default {
   methods: {
     ingresarSistema () {
       this.$router.push('/TD')
-    }, /* async ingresarSistema () {
+    } /* ,async ingresarSistema () {
       if (this.email.length === 0 && this.password.length === 0) {
         alert('Error en parametros vacios')
         return
@@ -100,7 +100,7 @@ export default {
       } else {
         this.$toast.error('Error en parametros')
       }
-    }
+    } */
   }
 }
 </script>
