@@ -1,9 +1,6 @@
 <template>
   <div>
-    <v-card shaped elevation="5" width="500" color="brown-darken-3" style="background-color: #6a8085;">
-      <v-card-title class="text-center">
-        Bienvenido doctor, identifiquece
-      </v-card-title>
+    <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
         Login main
       </v-card-title>
@@ -50,7 +47,7 @@ export default {
       email: '',
       password: '',
       validateEmail: [
-        v => !v || /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
+        v => !v || /^\w+([.-]?\w+)@\w+([.-]?\w+)(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
       ],
       validatePassword: [
         v => !v || v.length > 6 || 'Password minimo 6 caracteres'
@@ -65,10 +62,8 @@ export default {
     }
   },
   methods: {
-    ingresarSistema () {
-      this.$router.push('/TD')
-    } /* ,async ingresarSistema () {
-      if (this.email.length === 0 && this.password.length === 0) {
+    async ingresarSistema () {
+      if (this.email.length === 0 || this.password.length === 0) {
         alert('Error en parametros vacios')
         return
       }
@@ -100,7 +95,7 @@ export default {
       } else {
         this.$toast.error('Error en parametros')
       }
-    } */
+    }
   }
 }
 </script>
