@@ -1,11 +1,8 @@
 <template>
   <div>
-    <v-card shaped elevation="5" width="500" color="brown-darken-3" style="background-color: #6a8085;">
+    <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
-        Bienvenido doctor, identifiquece
-      </v-card-title>
-      <v-card-title class="text-center">
-        Login main
+        Pagina principal
       </v-card-title>
       <v-card-text>
         <v-form ref="frmLogin">
@@ -30,6 +27,11 @@
             mdi-account-key
           </v-icon>
           Ingresar
+        </v-btn>
+      </v-card-actions>
+      <v-card-actions>
+        <v-btn block @click="registrar">
+          Registrar
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -59,15 +61,8 @@ export default {
       mensaje: ''
     }
   },
-  mounted () {
-    if (this.$auth.loggedIn) {
-      this.$router.push('/dashboard')
-    }
-  },
   methods: {
-    ingresarSistema () {
-      this.$router.push('/TD')
-    }, /*    async ingresarSistema () {
+    async ingresarSistema () {
       if (this.email.length === 0 && this.password.length === 0) {
         alert('Error en parametros vacios')
         return
@@ -80,13 +75,8 @@ export default {
         await this.$auth.loginWith('local', {
           data: senData
         }).then(async (res) => {
-          if (res.data.alert === 'Success') {
-            // Save email and table information to localStorage
-            localStorage.setItem('loggedInEmail', this.email)
-            localStorage.setItem('loggedInTable', res.data.fromTable)
-            this.$router.push('/dashboard')
-          } else {
-            this.$toast.error(res.data.alert)
+          if (res.data.error == null) {
+            this.$router.push('/Principal')
           }
           console.log(await (res))
         }).catch((error) => {
@@ -98,19 +88,22 @@ export default {
           console.log(error)
         })
       } else {
-        this.$toast.error('Error en parametros')
+        alert('Error en parametros')
       }
+    },
+    registrar () {
+      this.$router.push('/Registro')
     }
   }
 }
 </script>
 
-  <style scoped>
-  .colorBtn
-  {
-    background-color: blue !important;
-  }
-  .v-dialog__container{
-    display: flex;
-  }
-  </style>
+    <style scoped>
+    .colorBtn
+    {
+      background-color: blue !important;
+    }
+    .v-dialog__container{
+      display: flex;
+    }
+    </style>

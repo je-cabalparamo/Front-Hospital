@@ -5,7 +5,7 @@
         Hospital
       </v-card-title>
       <v-card-title class="text-center">
-        Registro de doctores
+        Registro de enfermeros
       </v-card-title>
       <v-card-text>
         <v-form ref="frmLogin">
@@ -65,7 +65,6 @@
                 />
               </v-col>
             </v-row>
-            </v-contariner>
           </v-container>
         </v-form>
       </v-card-text>
@@ -111,7 +110,7 @@ export default {
   },
   methods: {
     prev () {
-      this.$router.push('/Doctores')
+      this.$router.push('/Enfermeros')
     },
     async novo () {
       const config = {
