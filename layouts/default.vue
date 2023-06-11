@@ -6,7 +6,6 @@
       :clipped="clipped"
       fixed
       app
-      style="background-color: #2ca880;"
     >
       <v-list>
         <v-list-item
@@ -29,16 +28,30 @@
       :clipped-left="clipped"
       fixed
       app
-      style="background-color: #789dca;"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <!--<v-btn
+        icon
+        @click.stop="miniVariant = !miniVariant"
+      >
+        <v-icon>mdi-{{ `chevron-${miniVariant ? 'right' : 'left'}` }}</v-icon>
+      </v-btn>-->
+      <!--<v-btn
+        icon
+        @click.stop="clipped = !clipped"
+      >
+        <v-icon>mdi-application</v-icon>
+      </v-btn>-->
+      <!--<v-btn
+        icon
+        @click.stop="fixed = !fixed"
+      >
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>-->
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
-      <v-btn v-if="$auth.loggedIn" icon @click="logout">
-        <v-icon>mdi-logout</v-icon>
-      </v-btn>
     </v-app-bar>
-    <v-main style="background-color: #b3cf99;">
+    <v-main>
       <v-container>
         <Nuxt />
       </v-container>
@@ -46,7 +59,6 @@
     <v-footer
       :absolute="!fixed"
       app
-      style="background-color: #789dca;"
     >
       <span>&copy; Lenguajes modernos de programacion | DICIS Enero-Diciembre {{ new Date().getFullYear() }}</span>
     </v-footer>
@@ -62,25 +74,25 @@ export default {
       drawer: false,
       fixed: false,
       items: [
-        {
-          icon: 'mdi-home-account',
-          title: 'Menu',
-          to: '/dashboard'
-        },
+        /* {
+          icon: 'mdi-apps',
+          title: 'Welcome',
+          to: '/Registro'
+        }, */
         {
           icon: 'mdi-doctor',
-          title: 'Medicos',
-          to: '/dashboard/medicos'
+          title: 'Doctores',
+          to: '/Doctores'
         },
         {
           icon: 'mdi-mother-nurse',
           title: 'Enfermeros',
-          to: '/dashboard/enfermeros'
+          to: '/Enfermeros'
         },
         {
           icon: 'mdi-account-injury-outline',
           title: 'Pácientes',
-          to: '/dashboard/pacientes'
+          to: '/TP'
         }
       ],
       miniVariant: false,
@@ -88,22 +100,6 @@ export default {
       rightDrawer: false,
       title: 'Hospital DICIS'
     }
-  },
-  methods: {
-    logout () {
-      localStorage.removeItem('loggedInEmail')
-      localStorage.removeItem('loggedInTable')
-      this.$auth.reset()
-      this.$router.push('/')
-    }
   }
 }
 </script>
-<style scoped>
-h1 {
-  font-size: 20px;
-}
-v-app-bar {
-  background-color: #789dca;
-}
-</style>

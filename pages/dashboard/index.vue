@@ -1,15 +1,15 @@
 <template>
-  <yolo />
+  <tablaPacientes />
 </template>
 
 <script>
-import yolo from '~/components/yolo/yolo_yolo.vue'
+import tablaPacientes from '~/components/principal/tabla-pacientes.vue'
 export default {
   name: 'IndexPage',
-  components:
-  {
-    yolo
+  auth: true,
+  components: {
+    tablaPacientes
   },
-  layout: 'login'
+  layout: 'main'
 }
 </script>

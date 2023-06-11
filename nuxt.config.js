@@ -3,6 +3,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - front-hospital',
@@ -24,9 +25,9 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    { src: '~/plugins/vue-toastification', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -43,7 +44,9 @@ export default {
   router: {
     middleware: ['auth']
   },
+  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     '@nuxtjs/auth'
   ],
@@ -69,7 +72,7 @@ export default {
         },
         endpoints: {
           login: {
-            url: '/masterlogin',
+            url: '/login',
             method: 'post'
           },
           user: false

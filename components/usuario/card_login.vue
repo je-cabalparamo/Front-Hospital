@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card shaped elevation="5" width="500" color="brown-darken-3" style="background-color: #6a8085;">
+    <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
         Bienvenido doctor, identifiquece
       </v-card-title>
@@ -32,6 +32,11 @@
           Ingresar
         </v-btn>
       </v-card-actions>
+      <v-card-actions>
+        <v-btn block @click="registrar">
+          Registrar
+        </v-btn>
+      </v-card-actions>
     </v-card>
     <v-dialog v-model="dialog" width="200" transition="dialog-bottom-transition">
       <div style="width: 100%; height: 100px; background-color: red;">
@@ -59,11 +64,6 @@ export default {
       mensaje: ''
     }
   },
-  mounted () {
-    if (this.$auth.loggedIn) {
-      this.$router.push('/dashboard')
-    }
-  },
   methods: {
     ingresarSistema () {
       this.$router.push('/TD')
@@ -80,13 +80,8 @@ export default {
         await this.$auth.loginWith('local', {
           data: senData
         }).then(async (res) => {
-          if (res.data.alert === 'Success') {
-            // Save email and table information to localStorage
-            localStorage.setItem('loggedInEmail', this.email)
-            localStorage.setItem('loggedInTable', res.data.fromTable)
-            this.$router.push('/dashboard')
-          } else {
-            this.$toast.error(res.data.alert)
+          if (res.data.error == null) {
+            this.$router.push('/Principal')
           }
           console.log(await (res))
         }).catch((error) => {
@@ -98,8 +93,11 @@ export default {
           console.log(error)
         })
       } else {
-        this.$toast.error('Error en parametros')
+        alert('Error en parametros')
       }
+    } */
+    registrar () {
+      this.$router.push('/Registro')
     }
   }
 }
