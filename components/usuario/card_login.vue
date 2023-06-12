@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="card-container">
     <v-card shaped elevation="5" width="500" color="brown-darken-3">
       <v-card-title class="text-center">
         Login main
@@ -110,4 +110,10 @@ export default {
   .v-dialog__container{
     display: flex;
   }
+  .card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
   </style>

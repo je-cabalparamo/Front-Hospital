@@ -32,6 +32,7 @@
       style="background-color: #789dca;"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <v-img :src="require('../assets/HealthCheck.png')" max-height="65%" max-width="3%" contain />
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
       <v-btn v-if="$auth.loggedIn" icon @click="logout">
