@@ -79,6 +79,8 @@ export default {
             // Save email and table information to localStorage
             localStorage.setItem('loggedInEmail', this.email)
             localStorage.setItem('loggedInTable', res.data.fromTable)
+            localStorage.setItem('loggedName', res.data.data.nombre + ' ' + res.data.data.apellido)
+            console.log(res.data)
             this.$router.push('/dashboard')
           } else {
             this.$toast.error(res.data.alert)
