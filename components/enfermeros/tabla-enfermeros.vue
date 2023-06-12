@@ -27,7 +27,7 @@
         </v-data-table>
       </v-row>
     </v-col>
-    <v-btn block style="background-color: #789dca;" @click="dialogCreate">
+    <v-btn v-if="loggedInEmail === 'director@hospital.com'" block style="background-color: #789dca;" @click="dialogCreate">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
     <v-dialog v-model="dialogBorrado" max-width="290" persistent>
